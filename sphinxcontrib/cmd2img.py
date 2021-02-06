@@ -4,7 +4,7 @@
     ~~~~~~~~~~~~~~~~~~~~~
 
     Allow cmd2img commands be rendered as nice looking images
-    
+
 
     See the README file for details.
 
@@ -54,14 +54,14 @@ class Cmd2figDirective(directives.images.Figure):
     required_arguments = 0
     option_spec = directives.images.Figure.option_spec.copy()
     option_spec.update(OWN_OPTION_SPEC)
-  
+
     def run(self):
         self.arguments = ['']
         total_options = self.options.copy()
 
         cmd = self.content[0]
         text = '\n'.join(self.content[1:])
-        own_options = dict([(k,v) for k,v in self.options.items() 
+        own_options = dict([(k,v) for k,v in self.options.items()
                                   if k in OWN_OPTION_SPEC])
 
         # Remove the own options from self-options which will be as figure
@@ -88,7 +88,7 @@ class Cmd2imgDirective(directives.images.Image):
     required_arguments = 0
     option_spec = directives.images.Image.option_spec.copy()
     option_spec.update(OWN_OPTION_SPEC)
-  
+
     def run(self):
         self.arguments = ['']
         #print ("%s start!self.options: %s" %(self.__class__.__name__, self.options))
@@ -96,7 +96,7 @@ class Cmd2imgDirective(directives.images.Image):
 
         # Parse the cmd/options/text
         cmd = self.content[0]
-        own_options = dict([(k,v) for k,v in self.options.items() 
+        own_options = dict([(k,v) for k,v in self.options.items()
                                   if k in OWN_OPTION_SPEC])
         text = '\n'.join(self.content[2:])
 
@@ -164,7 +164,7 @@ def render_cmd2img_images(app, doctree):
             if out["outreference"]:
                 reference_node = nodes.reference(refuri=out["outreference"])
                 img.replace_self(reference_node)
-                reference_node.append(img) 
+                reference_node.append(img)
             #if options.get("show_source", False):
             #    img.insert(0, nodes.literal_block("", "%s\n%s" %(cmd, text)))
         except Cmd2imgError as err:
@@ -196,15 +196,18 @@ def cmd_2_image (app, cmd2img):
     # 1) prepare the input file and output file
     if text:
         # With body
-        outfname = '%s-%s.%s' %(cmd_args[0], hashkey, ('--svg' in cmd_args and "svg" or 'png'))
         if cmd_args[0] == "ditaa":
+            outfname = '%s-%s.%s' %(cmd_args[0], hashkey, ('--svg' in cmd_args and "svg" or 'png'))
             # Ditaa must work on the target directory.
             cmd_args.extend([infname, outfname])
             os.chdir(path.join(app.builder.outdir, app.builder.imagedir))
         elif cmd_args[0] == "dot":
+            outfname = '%s-%s.%s' %(cmd_args[0], hashkey, ('--svg' in cmd_args and "svg" or 'png'))
             # dot -Tpng in_file -o out_file
             cmd_args.extend([infullfn, '-o', outfname])
         else:
+            outfname = '%s-%s.%s' % (cmd_args[0], hashkey,
+                                     options["image"].split(".")[-1])
             cmd_args.append(infullfn)
 
         if not path.isfile(infullfn):
